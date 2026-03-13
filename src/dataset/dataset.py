@@ -1,4 +1,5 @@
 import numpy as np
+import mne
 from scipy.io import loadmat
 
 
@@ -40,3 +41,25 @@ class BCIDataset:
         self.sfreq = file["nfo"]["fs"][0, 0].squeeze().item()
         channels = file["nfo"]["clab"][0, 0]
         self.channels = [ch.item() for ch in channels[0, :]]
+
+    def create_raw(self):
+        """
+        Returns an MNE Raw object.
+        Returns
+        -------
+        mne.RawArray
+            The MNE Raw object.
+        """
+        # Transpose the data for MNE (n_channels, n_times)
+        data = self.data.T
+
+        info = mne.create_info(
+            ch_names=self.channels,
+            sfreq=self.sfreq,
+            ch_types="eeg",
+        )
+
+        return mne.io.RawArray(
+            data=data,
+            info=info,
+        )
