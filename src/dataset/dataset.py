@@ -19,6 +19,10 @@ class BCIDataset:
         Vector of target classes (1 or 2)
     class_name : ndarray, shape (n_classes)
         The class names of the targets.
+    sfreq : int
+        The sampling rate in Hertz.
+    channels : list
+        A list of the channel names.
     """
     def __init__(self,
                  filepath):
@@ -33,3 +37,6 @@ class BCIDataset:
         targets = file["mrk"]["y"][0, 0].squeeze()
         self.targets = targets[~np.isnan(targets)].astype(int)
         self.class_name = file["mrk"]["className"][0, 0].squeeze()
+        self.sfreq = file["nfo"]["fs"][0, 0].squeeze().item()
+        channels = file["nfo"]["clab"][0, 0]
+        self.channels = [ch.item() for ch in channels[0, :]]
