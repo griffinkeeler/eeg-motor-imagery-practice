@@ -1,0 +1,13 @@
+# Ignore the virtual enviornment
+venv/
+.venv
+
+# Ignore ds_store files
+.DS_Store
+
+# Ignore python bytecode files
+__pycache__/
+*.pyc
+
+# Ignore EEG Data
+data/
