@@ -25,7 +25,7 @@ def preprocess_raw(
     mne.RawArray
         The filtered MNE Raw object.
     """
+    raw = raw.copy()
     raw.resample(sfreq=sfreq)
     raw.filter(l_freq=l_freq, h_freq=h_freq)
-
     return raw
