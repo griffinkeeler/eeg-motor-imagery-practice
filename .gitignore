@@ -11,3 +11,6 @@ __pycache__/
 
 # Ignore EEG Data
 data/
+
+# Ignore Codex instructions
+AGENTS.md
