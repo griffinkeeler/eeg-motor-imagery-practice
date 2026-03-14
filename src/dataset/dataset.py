@@ -14,7 +14,7 @@ class BCIDataset:
     ----------
     data : ndarray, shape (n_times, n_channels)
         The continuous EEG signals.
-    markers : ndarray, shape (sample, cues)
+    trials : ndarray, shape (trials)
         Position of cues in the EEG signals
     targets : ndarray, shape (n_targets)
         Vector of target classes (1 or 2)
@@ -30,13 +30,11 @@ class BCIDataset:
         self.filepath = filepath
         self._load_mat()
 
-    # TODO: Continue adding attributes (sfreq...)
     def _load_mat(self):
         file = loadmat(self.filepath)
         self.data = file["cnt"]
-        self.markers = file["mrk"]["pos"][0, 0]
-        targets = file["mrk"]["y"][0, 0].squeeze()
-        self.targets = targets[~np.isnan(targets)].astype(int)
+        self.trials = file["mrk"]["pos"][0, 0].squeeze()
+        self.targets = file["mrk"]["y"][0, 0].squeeze()
         self.class_name = file["mrk"]["className"][0, 0].squeeze()
         self.sfreq = file["nfo"]["fs"][0, 0].squeeze().item()
         channels = file["nfo"]["clab"][0, 0]
@@ -63,3 +61,18 @@ class BCIDataset:
             data=data,
             info=info,
         )
+
+    def create_events(self):
+        """
+        Creates an events data structure with valid trials and their class targets.
+
+        Returns
+        -------
+        ndarray, shape (n_trials, n_zeros, n_targets)
+            The event array containing MI trials, a zeros placeholder column,
+            and the class target for each trial.
+        """
+        targets = self.targets[~np.isnan(self.targets)].astype(int)
+        zeros = np.zeros_like(targets)
+        valid_trials = self.trials[:(len(targets))]
+        return np.column_stack([valid_trials, zeros, targets])
