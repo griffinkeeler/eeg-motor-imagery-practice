@@ -1,6 +1,6 @@
 
 
-def filter_raw(
+def preprocess_raw(
         raw,
         sfreq,
         l_freq,
