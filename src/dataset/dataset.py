@@ -32,7 +32,9 @@ class BCIDataset:
 
     def _load_mat(self):
         file = loadmat(self.filepath)
-        self.data = file["cnt"]
+        cnt = file["cnt"]
+        data_uv = 0.1 * cnt.astype(float)
+        self.data = (data_uv * 1e-6).T
         self.trials = file["mrk"]["pos"][0, 0].squeeze()
         self.targets = file["mrk"]["y"][0, 0].squeeze()
         self.class_name = file["mrk"]["className"][0, 0].squeeze()
@@ -49,7 +51,7 @@ class BCIDataset:
             The MNE Raw object.
         """
         # Transpose the data for MNE (n_channels, n_times)
-        data = self.data.T
+        data = self.data
 
         info = mne.create_info(
             ch_names=self.channels,
