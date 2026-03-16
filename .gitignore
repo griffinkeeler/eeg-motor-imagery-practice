@@ -14,3 +14,6 @@ data/
 
 # Ignore Codex instructions
 AGENTS.md
+
+# Ignore Jupyter notebooks
+notebooks/
