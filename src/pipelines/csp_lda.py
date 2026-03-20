@@ -40,7 +40,9 @@ def main():
     X = epochs.get_data()
     y = epochs.events[:, -1]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.33, random_state=42
+    )
 
     # Assemble CSP+LDA
     csp = CSP(
@@ -60,7 +62,6 @@ def main():
     lda.fit(X_train_features, y_train)
     y_pred = lda.predict(X_test_features)
     print("Accuracy:", accuracy_score(y_test, y_pred))
-
 
 
 if __name__ == "__main__":
